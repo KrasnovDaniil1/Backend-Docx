@@ -3,9 +3,9 @@ package user
 import "fmt"
 
 type User struct {
-	ID              int
-	Login, Password string
-	File            []string
+	Login    string   `json:"login"`
+	Password string   `json:"password"`
+	File     []string `json:"filename"`
 }
 
 // type file struct {
@@ -33,7 +33,7 @@ func checkUser(allUsers []User, login string) bool {
 
 func NewUser(allUsers *[]User, login, password string) {
 	if checkUser(*allUsers, login) {
-		user := User{ID: len(*allUsers), Login: login, Password: password, File: []string{}}
+		user := User{Login: login, Password: password, File: []string{}}
 		*allUsers = append(*allUsers, user)
 		fmt.Println("Новый пользователь создан")
 	}
