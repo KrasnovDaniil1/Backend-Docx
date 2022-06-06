@@ -26,11 +26,9 @@ func UserGetPost(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal([]byte(bodyBytes), &userBody)
 
 	if r.Method == http.MethodGet {
-		userBody.Status, userBody.Error = user.GetUser(&user.AllUsers, userBody.Login, userBody.Password)
+		userBody.Status, userBody.Error = user.GetUser(user.AllUsers, userBody.Login, userBody.Password)
 	} else if r.Method == http.MethodPost {
 		userBody.Status, userBody.Error = user.NewUser(&user.AllUsers, userBody.Login, userBody.Password)
-	} else {
-		fmt.Println("Немогу обработать запрос")
 	}
 	userWrite, _ := json.Marshal(userBody)
 	w.Header().Set("Content-Type", "application/json")
@@ -39,8 +37,6 @@ func UserGetPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserFilenameGetPostPutDelete(w http.ResponseWriter, r *http.Request) {
-	// w.Header().Set("Access-Control-Allow-Origin", "*")
-	// w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	if r.Method == http.MethodGet {
 		fmt.Println("UserFilenameGetPostPutDelete", r.Method, http.MethodGet)
 	} else if r.Method == http.MethodPost {
