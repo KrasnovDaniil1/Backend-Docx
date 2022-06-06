@@ -3,29 +3,38 @@ package handler
 import (
 	"app/user"
 	"encoding/json"
+
+	// "errors"
 	"fmt"
 	"io"
 	"net/http"
 )
 
+type UserResp struct {
+	Login    string   `json:"login"`
+	Password string   `json:"password"`
+	File     []string `json:"filename"`
+	Status   string   `json:"status"`
+	Error    string   `json:"error"`
+}
+
 func UserGetPost(w http.ResponseWriter, r *http.Request) {
-	// w.Header().Set("Access-Control-Allow-Origin", "*")
-	// w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	var userBody user.User
+	var userBody UserResp
 
 	bodyBytes, _ := io.ReadAll(r.Body)
 
-	err := json.Unmarshal([]byte(bodyBytes), &userBody)
-
-	fmt.Println(userBody, err)
+	json.Unmarshal([]byte(bodyBytes), &userBody)
 
 	if r.Method == http.MethodGet {
-		fmt.Println("UserGetPost")
+		userBody.Status, userBody.Error = user.GetUser(&user.AllUsers, userBody.Login, userBody.Password)
 	} else if r.Method == http.MethodPost {
-		fmt.Println("UserGetPost", r.Method, http.MethodPost)
+		userBody.Status, userBody.Error = user.NewUser(&user.AllUsers, userBody.Login, userBody.Password)
 	} else {
-		fmt.Println("UserGetPost", r.Method, http.MethodDelete)
+		fmt.Println("Немогу обработать запрос")
 	}
+	userWrite, _ := json.Marshal(userBody)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(userWrite)
 
 }
 
