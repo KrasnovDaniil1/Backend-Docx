@@ -25,18 +25,26 @@ func GetUser(allUsers []User, login, password string) (string, string) {
 func NewUser(allUsers *[]User, login, password string) (string, string) {
 	_, permission := PermissionUser(*allUsers, login, password)
 	var message, err string
-	if permission {
+	if !permission {
 		user := User{Login: login, Password: password, File: []string{}}
 		*allUsers = append(*allUsers, user)
 		userCreateFolder(login)
 		message = "Новый пользователь создан"
+		return message, err
 	}
 	err = "Такой пользователь уже есть"
 	return message, err
 }
 
-func userCreateNewFile(login string, password string) {
-	PermisionFile()
+func UserCreateNewFile(allUsers []User, login string, password string, filename string, text string) (string, string) {
+	var message, err string
+	key, permission := PermissionUser(allUsers, login, password)
+	if permission {
+		message, err = allUsers[key].AddNewFile(filename, text)
+	} else {
+		err = "Что то не так, не найден пользователь"
+	}
+	return message, err
 }
 
 /*создаёт папку*/
@@ -64,8 +72,4 @@ func PermissionUser(allUsers []User, login string, password string) (int, bool) 
 		}
 	}
 	return -1, false
-}
-
-func PermisionFile() {
-
 }

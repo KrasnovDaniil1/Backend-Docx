@@ -13,7 +13,9 @@ import (
 type UserResp struct {
 	Login    string   `json:"login"`
 	Password string   `json:"password"`
-	File     []string `json:"filename"`
+	Filename string   `json:"filename"`
+	Filetext string   `json:"filetext"`
+	File     []string `json:"file"`
 	Status   string   `json:"status"`
 	Error    string   `json:"error"`
 }
@@ -37,10 +39,17 @@ func UserGetPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserFilenameGetPostPutDelete(w http.ResponseWriter, r *http.Request) {
+
+	var userBody UserResp
+
+	bodyBytes, _ := io.ReadAll(r.Body)
+
+	json.Unmarshal([]byte(bodyBytes), &userBody)
+
 	if r.Method == http.MethodGet {
 		fmt.Println("UserFilenameGetPostPutDelete", r.Method, http.MethodGet)
 	} else if r.Method == http.MethodPost {
-		fmt.Println("UserFilenameGetPostPutDelete", r.Method, http.MethodPost)
+		userBody.Status, userBody.Error = user.UserCreateNewFile(user.AllUsers, userBody.Login, userBody.Password, userBody.Filename, userBody.Filetext)
 	} else if r.Method == http.MethodPut {
 		fmt.Println("UserFilenameGetPostPutDelete", r.Method, http.MethodPut)
 	} else if r.Method == http.MethodDelete {
@@ -48,4 +57,8 @@ func UserFilenameGetPostPutDelete(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Println("UserFilenameGetPostPutDelete", r.Method, http.MethodDelete)
 	}
+
+	userWrite, _ := json.Marshal(userBody)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(userWrite)
 }
