@@ -36,7 +36,18 @@ func NewUser(allUsers *[]User, login, password string) (string, string) {
 	return message, err
 }
 
-func UserCreateNewFile(allUsers []User, login string, password string, filename string, text string) (string, string) {
+func UserChangeFile(allUsers []User, login, password, filename, text string) (string, string) {
+	var message, err string
+	key, permission := PermissionUser(allUsers, login, password)
+	if permission {
+		message, err = allUsers[key].ChangeFile(filename, text)
+	} else {
+		err = "Что то не так, не найден пользователь"
+	}
+	return message, err
+}
+
+func UserCreateNewFile(allUsers []User, login, password, filename, text string) (string, string) {
 	var message, err string
 	key, permission := PermissionUser(allUsers, login, password)
 	if permission {
@@ -45,6 +56,17 @@ func UserCreateNewFile(allUsers []User, login string, password string, filename 
 		err = "Что то не так, не найден пользователь"
 	}
 	return message, err
+}
+
+func UserGetFile(allUsers []User, login, password, filename string) (string, string, string) {
+	var message, err, text string
+	key, permission := PermissionUser(allUsers, login, password)
+	if permission {
+		message, err, text = allUsers[key].GetFile(filename)
+	} else {
+		err = "Что то не так, не найден пользователь"
+	}
+	return message, err, text
 }
 
 /*создаёт папку*/
@@ -65,11 +87,22 @@ func userCreateFolder(login string) {
 
 /*проверяет есть ли такой пользователь*/
 
-func PermissionUser(allUsers []User, login string, password string) (int, bool) {
+func PermissionUser(allUsers []User, login, password string) (int, bool) {
 	for i, v := range allUsers {
 		if v.Login == login && v.Password == password {
 			return i, true
 		}
 	}
 	return -1, false
+}
+
+func UserDeleteFile(allUsers []User, login, password, filename string) (string, string) {
+	var message, err string
+	key, permission := PermissionUser(allUsers, login, password)
+	if permission {
+		message, err = allUsers[key].DeleteFile(filename)
+	} else {
+		err = "Что то не так, не найден пользователь"
+	}
+	return message, err
 }

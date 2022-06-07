@@ -3,9 +3,6 @@ package handler
 import (
 	"app/user"
 	"encoding/json"
-
-	// "errors"
-	"fmt"
 	"io"
 	"net/http"
 )
@@ -31,6 +28,8 @@ func UserGetPost(w http.ResponseWriter, r *http.Request) {
 		userBody.Status, userBody.Error = user.GetUser(user.AllUsers, userBody.Login, userBody.Password)
 	} else if r.Method == http.MethodPost {
 		userBody.Status, userBody.Error = user.NewUser(&user.AllUsers, userBody.Login, userBody.Password)
+	} else {
+		userBody.Error = "Невозможно обработать запрос, ошибка в сервере"
 	}
 	userWrite, _ := json.Marshal(userBody)
 	w.Header().Set("Content-Type", "application/json")
@@ -47,15 +46,15 @@ func UserFilenameGetPostPutDelete(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal([]byte(bodyBytes), &userBody)
 
 	if r.Method == http.MethodGet {
-		fmt.Println("UserFilenameGetPostPutDelete", r.Method, http.MethodGet)
+		userBody.Status, userBody.Error, userBody.Filetext = user.UserGetFile(user.AllUsers, userBody.Login, userBody.Password, userBody.Filename)
 	} else if r.Method == http.MethodPost {
 		userBody.Status, userBody.Error = user.UserCreateNewFile(user.AllUsers, userBody.Login, userBody.Password, userBody.Filename, userBody.Filetext)
 	} else if r.Method == http.MethodPut {
-		fmt.Println("UserFilenameGetPostPutDelete", r.Method, http.MethodPut)
+		userBody.Status, userBody.Error = user.UserChangeFile(user.AllUsers, userBody.Login, userBody.Password, userBody.Filename, userBody.Filetext)
 	} else if r.Method == http.MethodDelete {
-		fmt.Println("UserFilenameGetPostPutDelete", r.Method, http.MethodDelete)
+		userBody.Status, userBody.Error = user.UserDeleteFile(user.AllUsers, userBody.Login, userBody.Password, userBody.Filename)
 	} else {
-		fmt.Println("UserFilenameGetPostPutDelete", r.Method, http.MethodDelete)
+		userBody.Error = "Невозможно обработать запрос, ошибка в сервере"
 	}
 
 	userWrite, _ := json.Marshal(userBody)
