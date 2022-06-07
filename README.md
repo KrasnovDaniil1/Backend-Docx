@@ -8,5 +8,5 @@
     <li>POST /:user/:file?filename -- создать файл</li>
     <li>DELETE /:user/:file?filename -- удалить файл</li>
 </ul>
-<h6>Структура проекта</h6>
+<h4>Структура проекта</h6>
 <img src="./ImageReadme/1.jpg" />
