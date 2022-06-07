@@ -8,7 +8,7 @@ import (
 
 func main() {
 
-	http.Handle("/user/", http.HandlerFunc(handler.UserGetPost))
+	http.Handle("/user", http.HandlerFunc(handler.UserGetPost))
 	http.Handle("/user/filename", http.HandlerFunc(handler.UserFilenameGetPostPutDelete))
 
 	fmt.Println("Сервер запущен")

@@ -1,8 +1,12 @@
 # backend-docx
 
-GET /:user -- авторизация и получение данных
-POST /:user -- регистрация и получение данных
-GET /:user/:file?filename -- получение конкретного файла
-PUT /:user/:file?filename -- сохранить изменение файла
-POST /:user/:file?filename -- создать файл
-DELETE /:user/:file?filename -- удалить файл
+<ul>
+    <li>GET /:user -- авторизация и получение данных</li>
+    <li>POST /:user -- регистрация и получение данных</li>
+    <li>GET /:user/:file?filename -- получение конкретного файла</li>
+    <li>PUT /:user/:file?filename -- сохранить изменение файла</li>
+    <li>POST /:user/:file?filename -- создать файл</li>
+    <li>DELETE /:user/:file?filename -- удалить файл</li>
+</ul>
+<h6>Структура проекта</h6>
+<img src="./ImageReadme/1.jpg" />
