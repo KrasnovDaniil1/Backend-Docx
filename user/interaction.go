@@ -8,16 +8,18 @@ import (
 
 /*возвращает данные пользователя*/
 
-func GetUser(allUsers []User, login, password string) (string, string) {
+func GetUser(allUsers []User, login, password string) (string, string, []string) {
 	var message, err string
-	_, permission := PermissionUser(allUsers, login, password)
+	var file []string
+	key, permission := PermissionUser(allUsers, login, password)
 	if permission {
 		userCreateFolder(login) // навсякий случай создаём папку если ранее не создали
+		file = allUsers[key].GetAllFile()
 		message = "Авторизация прошла успешна"
-		return message, err
+		return message, err, file
 	}
 	err = "Неверный логин или пароль"
-	return message, err
+	return message, err, file
 }
 
 /*создаёт нового пользователя*/

@@ -25,7 +25,7 @@ func UserGetPost(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal([]byte(bodyBytes), &userBody)
 
 	if r.Method == http.MethodGet {
-		userBody.Status, userBody.Error = user.GetUser(user.AllUsers, userBody.Login, userBody.Password)
+		userBody.Status, userBody.Error, userBody.File = user.GetUser(user.AllUsers, userBody.Login, userBody.Password)
 	} else if r.Method == http.MethodPost {
 		userBody.Status, userBody.Error = user.NewUser(&user.AllUsers, userBody.Login, userBody.Password)
 	} else {

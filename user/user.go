@@ -81,3 +81,7 @@ func (user *User) DeleteFile(filename string) (string, string) {
 	err = "Нет такого файла"
 	return message, err
 }
+
+func (user *User) GetAllFile() []string {
+	return user.File
+}
